@@ -3,6 +3,8 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ObjectDoesNotExist
 from rates.models import Currency, Rate
+from rates.utils import profit, id_to_name
+import json
 
 
 def index(request):
@@ -11,8 +13,9 @@ def index(request):
 
 def currencies(request):
     result = get_list_or_404(Currency)
-    result = ',<p>'.join([('\"%s\": %s' % (curr.name, curr.__str__())) for curr in result])
-    return HttpResponse(result)
+    dict_curr = dict()
+    [dict_curr.update(curr.to_dict()) for curr in result]
+    return HttpResponse(json.dumps(dict_curr))
 
 
 @csrf_exempt
@@ -33,11 +36,20 @@ def currency(request, curr, to=''):
         return HttpResponse("POST currency: %s" % (curr,))
     elif request.method == 'GET':
         result = get_object_or_404(Currency, name=curr)
-        return HttpResponse(result.__str__())
+        return HttpResponse(json.dumps(result.to_dict()))
     elif request.method == 'DELETE':
         Currency.objects.get(name=curr).delete()
         return HttpResponse("DELETE currency: %s" % (curr,))
 
 
 def sequence(request):
-    return HttpResponse("sequence")
+    prof = profit()
+    prof_proc = None
+    seq = None
+    if len(prof) > 0:
+        prof_proc = max(prof.keys())
+        seq = prof[prof_proc]
+        seq = id_to_name(seq)
+    result = {"profit_percent": prof_proc, "sequence": seq}
+    return HttpResponse(json.dumps(result))
+
