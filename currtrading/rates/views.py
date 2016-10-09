@@ -50,6 +50,9 @@ def sequence(request):
         prof_proc = max(prof.keys())
         seq = prof[prof_proc]
         seq = id_to_name(seq)
-    result = {"profit_percent": prof_proc, "sequence": seq}
-    return HttpResponse(json.dumps(result))
+        result = {"profit_percent": prof_proc, "sequence": seq}
+        return HttpResponse(json.dumps(result))
+    else:
+        result = 'no risk - free opportunities exist yielding over 1.00 % profit exist'
+        return HttpResponse(result)
 

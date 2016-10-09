@@ -1,5 +1,6 @@
 from socket import socket
 import time
+import csv
 
 
 def put_curr(curr_from, curr_to, rate):
@@ -42,5 +43,22 @@ def load_default():
     put_curr('RUB', 'CNY', 0.08)
     put_curr('RUB', 'RUB', 1)
 
+
+def load_csv(f_name):
+    with open(f_name, 'rb') as fd:
+        reader = csv.reader(fd, delimiter=' ', quotechar='\n')
+        header = []
+        for row in reader:
+            row = [r for r in row if r != '']
+            if not header:
+                header = row[:]
+            else:
+                for i in range(len(header)):
+                    print(row[0], header[i], row[i + 1])
+                    put_curr(row[0], header[i], row[i + 1])
+
+
 if __name__ == '__main__':
     load_default()
+    # or
+    # load_csv('../matrix.csv')
