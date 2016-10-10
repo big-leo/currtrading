@@ -1,5 +1,8 @@
 from rates.models import Currency, Rate
-from Queue import Queue
+try:
+    from Queue import Queue
+except ImportError:
+    from queue import Queue
 queue_rate = Queue()
 
 
@@ -44,7 +47,11 @@ def profit():
     currs_id = [curr.id for curr in Currency.objects.all()]
     ways = {}
     for id1 in currs_id:
+        if ways:
+            break
         for curr2 in Rate.objects.filter(curr_from=id1):
+            if ways:
+                break
             if id1 == curr2.curr_to.id:
                 continue
             rate = getid_rate(id1, curr2.curr_to.id)

@@ -46,8 +46,8 @@ def sequence(request):
     prof = profit()
     prof_proc = None
     seq = None
-    if len(prof) > 0:
-        prof_proc = max(prof.keys())
+    if len(prof) == 1:
+        prof_proc = list(prof.keys())[0]
         seq = prof[prof_proc]
         seq = id_to_name(seq)
         result = {"profit_percent": prof_proc, "sequence": seq}

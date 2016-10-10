@@ -6,14 +6,14 @@ import csv
 def put_curr(curr_from, curr_to, rate):
     s = socket()
     s.connect(('127.0.0.1', 8000))
-    s.send('PUT /currency/%s/%s/?rate=%s HTTP/1.1\r\n\r\n' % (curr_from, curr_to, str(rate)))
+    s.send(('PUT /currency/%s/%s/?rate=%s HTTP/1.1\r\n\r\n' % (curr_from, curr_to, str(rate))).encode())
     time.sleep(1)
 
 
 def post_curr(curr):
     s = socket()
     s.connect(('127.0.0.1', 8000))
-    s.send('POST /currency/%s/ HTTP/1.1\r\n\r\n' % (curr,))
+    s.send(('POST /currency/%s/ HTTP/1.1\r\n\r\n' % curr).encode())
     time.sleep(1)
 
 
